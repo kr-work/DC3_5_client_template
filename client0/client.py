@@ -41,7 +41,6 @@ async def main():
             angular_velocity_sign = 1
             angular_velocity = np.pi / 2
             shot_angle = 91.7
-            client.logger.info(f"translation_velocity: {translation_velocity}")
             await client.send_shot_info(
                 translation_velocity=translation_velocity,
                 angular_velocity_sign=angular_velocity_sign,

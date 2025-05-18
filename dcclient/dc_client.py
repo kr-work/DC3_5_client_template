@@ -166,13 +166,13 @@ class DCClient:
                             latest_state_data: StateSchema = json.loads(event.data)
                             latest_state_data = StateSchema(**latest_state_data)
                             self.state_data = latest_state_data
-                            self.logger.info(f"Received latest state data: {latest_state_data}")
+                            self.logger.debug(f"Received latest state data: {latest_state_data}")
                             yield latest_state_data
 
                         elif event.type == "state_update":
                             state_data: StateSchema = json.loads(event.data)
                             state_data = StateSchema(**state_data)
-                            self.logger.info(f"Received state data: {state_data}")
+                            self.logger.debug(f"Received state data: {state_data}")
                             
             except aiohttp.client_exceptions.ServerDisconnectedError:
                 self.logger.error("Server is not running. Please contact the administrator.")
