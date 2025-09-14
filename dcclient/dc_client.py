@@ -21,8 +21,8 @@ from dcclient.send_database import (
 )
 
 TEAM_INFO_URL = "http://localhost:10000/store-team-config"
-SHOT_INFO_URL = "http://localhost:10000/shot-info"
-SSE_URL = "http://localhost:10000/stream"
+SHOT_INFO_URL = "http://localhost:10000/shots"
+SSE_URL = "http://localhost:10000/matches"
 
 # ログファイルの保存先ディレクトリを指定
 par_dir = pathlib.Path(__file__).parents[1]
@@ -154,7 +154,8 @@ class DCClient:
 
 
     async def receive_state_data(self) -> AsyncGenerator[StateSchema, None]:
-        url = f"{SSE_URL}/{self.match_id}"
+        url = f"{SSE_URL}/{self.match_id}/stream"
+        self.logger.info(f"Connecting to SSE URL: {url}")  # URLをログに出力
         while True:
             try:
                 async with client.EventSource(

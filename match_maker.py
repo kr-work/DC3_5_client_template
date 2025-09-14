@@ -8,7 +8,7 @@ import logging
 from load_secrets import username, password
 from dcclient.send_database import ClientDataModel
 
-URL = "http://localhost:10000/start-match"
+URL = "http://localhost:10000/matches"
 logger = logging.getLogger("Match_Maker")
 logger.setLevel(level=logging.INFO)
 formatter = logging.Formatter(
@@ -35,7 +35,7 @@ class MatchMaker:
         async with aiohttp.ClientSession(
             auth=BasicAuth(login=username, password=password)) as session:
             try:
-                async with session.get(
+                async with session.post(
                     url=URL,
                     json=data.model_dump(),
                     ) as response:
