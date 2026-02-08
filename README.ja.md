@@ -92,7 +92,7 @@ client = DCClient(match_id=match_id, username=username, password=password, match
 ```
 match_id は試合作成時にサーバから受け取ります。
 usernameとpasswordはクライアントを特定するために、設定する必要があります。
-本番環境では、参加者にusernameとpasswordを設定して参加して頂く必要がありますが、今は[.env](/.env)にて予め設定済みのものがあるので、そちらをご利用ください。
+本番環境では、参加者にusernameとpasswordを設定して参加して頂く必要がありますが、今は[.env](./.env)にて予め設定済みのものがあるので、そちらをご利用ください。
 
 
 まず初めにチーム情報をサーバへ送信します。
@@ -128,7 +128,7 @@ client = DCClient(match_id=match_id, username=username, password=password, match
 ```
 match_id は試合作成時にサーバから受け取ります。
 usernameとpasswordはクライアントを特定するために、設定する必要があります。
-本番環境では、参加者にusernameとpasswordを設定して参加して頂く必要がありますが、今は[.env](/.env)にて予め設定済みのものがあるので、そちらをご利用ください。
+本番環境では、参加者にusernameとpasswordを設定して参加して頂く必要がありますが、今は[.env](./.env)にて予め設定済みのものがあるので、そちらをご利用ください。
 
 
 まず初めにチーム情報をサーバへ送信します。
