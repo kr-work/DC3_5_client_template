@@ -10,6 +10,7 @@ import aiohttp.client_exceptions
 import numpy as np
 from typing import AsyncGenerator
 from aiohttp_sse_client2 import client
+from typing import Any
 
 from dcclient.receive_data import (
     StateSchema,
@@ -83,6 +84,12 @@ class DCClient:
         self.sse_url = f"http://{host}:{port}/matches"
         self.positioned_stones_url = f"http://{host}:{port}/matches"
 
+    async def _read_response_body(self, response: aiohttp.ClientResponse) -> Any:
+        try:
+            return await response.json()
+        except Exception:
+            return await response.text()
+
     async def send_team_info(
         self, team_info: TeamModel
     ) -> MatchNameModel:
@@ -111,25 +118,26 @@ class DCClient:
                     },
                     json=team_info.model_dump(),
                 ) as response:
+                    response_body = await self._read_response_body(response)
 
-                        # Successful response
-                        if response.status == 200:
-                            self.logger.info("Team information successfully sent.")
-                            self.match_team_name = await response.json()
-                            print(f"team_name: {self.match_team_name}")
-
-                        elif response.status == 400:
-                            self.logger.error(f"response: {response}")
-                            self.logger.error("Bad Request: Please check the team information settings.")
-
-                        # Unauthorized access
-                        elif response.status == 401:
-                            self.logger.error(f"response: {response}")
-                            self.logger.error(
-                                "Unauthorized access. Please check your credentials."
-                            )
+                    if response.status == 200:
+                        self.logger.info("Team information successfully sent.")
+                        if isinstance(response_body, str):
+                            self.match_team_name = MatchNameModel(response_body)
                         else:
-                            self.logger.error("Failed to send team information.")
+                            self.match_team_name = response_body
+                    elif response.status == 400:
+                        self.logger.error(
+                            f"Bad Request: status={response.status}, body={response_body}"
+                        )
+                    elif response.status == 401:
+                        self.logger.error(
+                            f"Unauthorized: status={response.status}, body={response_body}"
+                        )
+                    else:
+                        self.logger.error(
+                            f"Failed to send team information: status={response.status}, body={response_body}"
+                        )
             except aiohttp.client_exceptions.ServerDisconnectedError:
                 self.logger.error("Server is not running. Please contact the administrator.")
 
@@ -191,18 +199,19 @@ class DCClient:
                     params={"match_id": self.match_id},
                     json=shot_info.model_dump(),
                 ) as response:
+                    response_body = await self._read_response_body(response)
                     # Successful response
                     if response.status == 200:
                         self.logger.debug("Shot information successfully sent.")
                     # Unauthorized access
                     elif response.status == 401:
-                        self.logger.error(f"response: {response}")
                         self.logger.error(
-                            "Unauthorized access. Please check your credentials."
+                            f"Unauthorized: status={response.status}, body={response_body}"
                         )
                     else:
-                        self.logger.error(f"response: {response}")
-                        self.logger.error("Failed to send shot information.")
+                        self.logger.error(
+                            f"Failed to send shot information: status={response.status}, body={response_body}"
+                        )
             except aiohttp.client_exceptions.ServerDisconnectedError:
                 self.logger.error("Server is not running. Please contact the administrator.")
             except Exception as e:
@@ -225,29 +234,35 @@ class DCClient:
             try:
                 async with session.post(
                     url=url,
-                    params={"match_id": self.match_id,
-                    "request": positioned_stones.value},
+                    params={
+                        "match_id": self.match_id,
+                        "request": positioned_stones.value,
+                    },
                 ) as response:
+                    response_body = await self._read_response_body(response)
                     # Successful response
                     if response.status == 200:
                         self.logger.debug("Positioned stones information successfully sent.")
                     # Bad Request
                     elif response.status == 400:
-                        self.logger.error(f"response: {response}")
-                        self.logger.error("Bad Request: Please check the power play settings.")
+                        self.logger.error(
+                            f"Bad Request: status={response.status}, body={response_body}"
+                        )
                     # Unauthorized access
                     elif response.status == 401:
-                        self.logger.error(f"response: {response}")
                         self.logger.error(
-                            "Unauthorized access. Please check your credentials."
+                            f"Unauthorized: status={response.status}, body={response_body}"
                         )
                     # Conflict error
                     elif response.status == 409:
-                        self.logger.error(f"response: {response}")
+                        self.logger.error(
+                            f"Conflict: status={response.status}, body={response_body}"
+                        )
                     # Other errors
                     else:
-                        self.logger.error(f"response: {response}")
-                        self.logger.error("Failed to send positioned stones information.")
+                        self.logger.error(
+                            f"Failed to send positioned stones information: status={response.status}, body={response_body}"
+                        )
             except aiohttp.client_exceptions.ServerDisconnectedError:
                 self.logger.error("Server is not running. Please contact the administrator.")
             except Exception as e:
