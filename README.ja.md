@@ -2,8 +2,8 @@
 こちらはデジタルカーリング4用のクライアントライブラリです。
 
 ## 言語
-- [英語(デフォルト)](https://github.com/kawamlab/DC3-python/blob/master/README.md)
-- [日本語](https://github.com/kawamlab/DC3-python/blob/master/README.ja.md)
+- [英語(デフォルト)](https://github.com/kr-work/DC4-Python/blob/main/README.md)
+- [日本語](https://github.com/kr-work/DC4-Python/blob/main/README.ja.md)
 
 ## インストール
 ```bash

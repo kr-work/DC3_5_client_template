@@ -3,8 +3,8 @@
 This is the client library for Digital Curling 4.
 
 ## Language
-- [English(default)](https://github.com/kawamlab/DC3-python/blob/master/README.md)
-- [Japanese](https://github.com/kawamlab/DC3-python/blob/master/README.ja.md)
+- [English(default)](https://github.com/kr-work/DC4-Python/blob/main/README.md)
+- [Japanese](https://github.com/kr-work/DC4-Python/blob/main/README.ja.md)
 
 ## Install
 ```bash
