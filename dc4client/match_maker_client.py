@@ -2,7 +2,7 @@ import aiohttp
 from aiohttp import BasicAuth
 from typing import Any
 
-from dcclient.send_data import ClientDataModel
+from dc4client.send_data import ClientDataModel
 
 
 class MatchMakerClient:
